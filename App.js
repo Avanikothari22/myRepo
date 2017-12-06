@@ -54,9 +54,10 @@ FCM.on(FCMEvent.RefreshToken, (token) => {
 });
 export default class App extends Component {
   componentWillMount(){
-   FCM.subscribeToTopic('/topics/test_all');
+   //FCM.subscribeToTopic('/topics/test_all');
 }
   componentDidMount() {
+    FCM.subscribeToTopic('/topics/test_all');
     // iOS: show permission prompt for the first call. later just check permission in user settings
     // Android: check permission in user settings
     FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('notification permission rejected'));
