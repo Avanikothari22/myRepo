@@ -5,11 +5,14 @@
  */
 
 import React, { Component } from 'react';
+import {NativeModules} from 'react-native';
+const ToastModule = NativeModules.RNToast;
 import {
   Platform,
   StyleSheet,
   Text,
   View,
+  Button,
   
 } from 'react-native';
 import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
@@ -20,6 +23,7 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 FCM.on(FCMEvent.Notification, async (notif) => {
+  console.log('notif in first ON :::', notif);
   // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
   if(notif.local_notification){
     //this is a local notification
@@ -29,6 +33,14 @@ FCM.on(FCMEvent.Notification, async (notif) => {
     //Android: app is open/resumed because user clicked banner or tapped app icon
   }
   // await someAsyncCall();
+
+  if(Platform.OS === 'android'){
+    FCM.presentLocalNotification({
+      show_in_foreground: true,
+      title: notif.fcm.title,
+      priority: 'high'
+    })
+  }
 
   if(Platform.OS ==='ios'){
     //optional
@@ -86,15 +98,7 @@ componentWillUnmount() {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+        <Button onPress={() => ToastModule.showToast("heyy learner!!!", ToastModule.DURATION_SHORT_KEY)} title='SHOW TOAST'></Button>
       </View>
     );
   }
